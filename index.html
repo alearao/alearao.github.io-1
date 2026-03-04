@@ -380,7 +380,7 @@
         .exp-list { display: flex; flex-direction: column; }
         .exp-row {
             display: grid;
-            grid-template-columns: 200px 1fr auto;
+            grid-template-columns: 200px 1fr;
             gap: 40px;
             align-items: baseline;
             padding: 32px 0;
@@ -524,6 +524,113 @@
         }
         .project-links a:hover { background: var(--zap); border-color: var(--zap); color: var(--ink); }
 
+
+
+        /* ── PRINT CONTACT SHEET ──────────────────────────────── */
+        .print-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 48px auto 0;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            background: none;
+            border: 1px solid var(--ink);
+            padding: 13px 28px;
+            color: var(--ink);
+            cursor: none;
+            transition: all 0.2s;
+        }
+        .print-btn:hover { background: var(--ink); color: var(--paper); }
+        .prints-area {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 40px 0 8px;
+        }
+        .prints-area.open { display: grid; }
+        .print-card {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 2px 5px 20px rgba(0,0,0,0.1);
+            transform: rotate(var(--rot, 0deg));
+            animation: printSlide 0.45s var(--ease) var(--delay, 0s) both;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .print-card:hover {
+            transform: rotate(0deg) translateY(-4px);
+            box-shadow: 4px 12px 32px rgba(0,0,0,0.16);
+            z-index: 10;
+        }
+        .print-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: contain;
+            background: #f0ede8;
+            display: block;
+            margin-bottom: 14px;
+        }
+        .print-card-tag {
+            font-family: var(--mono);
+            font-size: 0.54rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--zap);
+            padding: 3px 7px;
+            width: fit-content;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .print-card-name {
+            font-family: var(--serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+        .print-card-desc {
+            font-size: 0.78rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            flex: 1;
+        }
+        .print-card-tech {
+            font-family: var(--mono);
+            font-size: 0.56rem;
+            color: #999;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+        }
+        .print-card-links {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .print-card-links a {
+            font-family: var(--mono);
+            font-size: 0.54rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border: 1px solid rgba(0,0,0,0.15);
+            color: #444;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .print-card-links a:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+        @keyframes printSlide {
+            from { opacity: 0; transform: translateY(-24px) rotate(var(--rot, 0deg)); }
+            to   { opacity: 1; transform: translateY(0)     rotate(var(--rot, 0deg)); }
+        }
+
         /* ── SKILLS ───────────────────────────────────────────── */
         .skills-grid {
             display: grid;
@@ -665,12 +772,13 @@
             #about .section-inner { grid-template-columns: 1fr; gap: 48px; }
             .edu-grid { grid-template-columns: 1fr; }
             .exp-row { grid-template-columns: 1fr; gap: 12px; }
-            .projects-grid { grid-template-columns: 1fr; }
+            .prints-area.open { grid-template-columns: 1fr 1fr; }
             .skills-grid { grid-template-columns: 1fr 1fr; }
             .contact-layout { grid-template-columns: 1fr; gap: 48px; }
             footer { flex-direction: column; gap: 12px; padding: 24px; text-align: center; }
         }
         @media (max-width: 600px) {
+            .prints-area.open { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: 1fr; }
             .about-stat-row { grid-template-columns: 1fr 1fr; }
             body { cursor: auto; }
@@ -937,94 +1045,102 @@
                 <span class="section-num">05 /</span>
                 <h2 class="section-title">Pro<em>jects</em></h2>
             </div>
-            <div class="projects-grid">
+            <button class="print-btn" id="printBtn">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <rect x="1" y="4" width="12" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                    <path d="M4 4V2h6v2M4 11v1h6v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    <circle cx="10.5" cy="7.5" r="0.8" fill="currentColor"/>
+                </svg>
+                Print contact sheet
+            </button>
+            <div class="prints-area" id="printsArea">
 
-                <div class="project-card reveal">
-                    <img src="c2pay.png" alt="C2Pay" class="project-img">
-                    <div class="project-tag">🏆 Best Financial Hack @ HackHarvard '25</div>
-                    <div class="project-name">C2Pay</div>
-                    <div class="project-desc">An SDK applying risk-based adaptive MFA and C2PA manifest generation with TEE-backed keys for verifiable payment security.</div>
-                    <div class="project-tech">React Native · Expo</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="c2pay.png" alt="C2Pay">
+                    <div class="print-card-tag">🏆 Best Financial Hack @ HackHarvard '25</div>
+                    <div class="print-card-name">C2Pay</div>
+                    <div class="print-card-desc">An SDK applying risk-based adaptive MFA and C2PA manifest generation with TEE-backed keys for verifiable payment security.</div>
+                    <div class="print-card-tech">React Native · Expo</div>
+                    <div class="print-card-links">
                         <a href="https://devpost.com/software/c2pay?ref_content=my-projects-tab&ref_feature=my_projects" target="_blank">Devpost ↗</a>
                         <a href="https://github.com/sofiaal1/C2Pay" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-1">
-                    <img src="trovr.png" alt="Trovr" class="project-img">
-                    <div class="project-tag">🥈 2nd Place @ Tufts Producthon Spring '25</div>
-                    <div class="project-name">Trovr</div>
-                    <div class="project-desc">A university marketplace app for students to share, borrow, and trade resources and services within campus.</div>
-                    <div class="project-tech">Product Design · Figma</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="trovr.png" alt="Trovr">
+                    <div class="print-card-tag">🥈 2nd Place @ Tufts Producthon Spring '25</div>
+                    <div class="print-card-name">Trovr</div>
+                    <div class="print-card-desc">A university marketplace app for students to share, borrow, and trade resources and services within campus.</div>
+                    <div class="print-card-tech">Product Design · Figma</div>
+                    <div class="print-card-links">
                         <a href="https://www.canva.com/design/DAGqtA3C5RY/wihlm53eKoVSRYpNfciN9w/edit" target="_blank">Product ↗</a>
                         <a href="https://github.com/chloeewong19/campus-card-swap" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-2">
-                    <img src="tccwebsite.png" alt="TCC Website" class="project-img">
-                    <div class="project-name">TCC Website</div>
-                    <div class="project-desc">Website for the Tufts Consulting Collective showcasing their services and projects.</div>
-                    <div class="project-tech">HTML · CSS · JavaScript</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="tccwebsite.png" alt="TCC Website">
+                    <div class="print-card-name">TCC Website</div>
+                    <div class="print-card-desc">Website for the Tufts Consulting Collective showcasing their services and projects.</div>
+                    <div class="print-card-tech">HTML · CSS · JavaScript</div>
+                    <div class="print-card-links">
                         <a href="https://www.tuftsconsultingcollective.com" target="_blank">Live ↗</a>
                         <a href="https://github.com/alearao/tccwebsite" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-1">
-                    <img src="cinelog.png" alt="Cinelog" class="project-img">
-                    <div class="project-name">Cinelog</div>
-                    <div class="project-desc">A web app for tracking and discovering films, built with a full Node.js + MongoDB backend.</div>
-                    <div class="project-tech">Node.js · MongoDB · JavaScript</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="cinelog.png" alt="Cinelog">
+                    <div class="print-card-name">Cinelog</div>
+                    <div class="print-card-desc">A web app for tracking and discovering films, built with a full Node.js + MongoDB backend.</div>
+                    <div class="print-card-tech">Node.js · MongoDB · JavaScript</div>
+                    <div class="print-card-links">
                         <a href="https://github.com/kubsgok/cinelog" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-2">
-                    <img src="jumbuddy.png" alt="Jumbuddy" class="project-img">
-                    <div class="project-name">Jumbuddy</div>
-                    <div class="project-desc">A hackathon app helping university students meet others with similar interests.</div>
-                    <div class="project-tech">React Native · Airtable · Tailwind</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="jumbuddy.png" alt="Jumbuddy">
+                    <div class="print-card-name">Jumbuddy</div>
+                    <div class="print-card-desc">A hackathon app helping university students meet others with similar interests.</div>
+                    <div class="print-card-tech">React Native · Airtable · Tailwind</div>
+                    <div class="print-card-links">
                         <a href="https://devpost.com/software/jumbuddy" target="_blank">Devpost ↗</a>
                         <a href="https://github.com/rakshitranga/jumbuddy" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-3">
-                    <img src="jewelry.png" alt="Jewelry DB" class="project-img">
-                    <div class="project-name">Jewelry Database System</div>
-                    <div class="project-desc">Full product life-cycle with a client: a management system for their jewelry business.</div>
-                    <div class="project-tech">Java · MySQL</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="jewelry.png" alt="Jewelry DB">
+                    <div class="print-card-name">Jewelry Database System</div>
+                    <div class="print-card-desc">Full product life-cycle with a client: a management system for their jewelry business.</div>
+                    <div class="print-card-tech">Java · MySQL</div>
+                    <div class="print-card-links">
                         <a href="full IA.pdf" target="_blank">Report ↗</a>
                         <a href="https://github.com/alearao/jewelrydatabse-system" target="_blank">GitHub ↗</a>
                         <a href="https://youtu.be/2Cy1SLAXZLg" target="_blank">Demo ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal">
-                    <img src="chatbot.png" alt="IB Edubot" class="project-img">
-                    <div class="project-name">IB-Edubot</div>
-                    <div class="project-desc">An AI chatbot to help IB students revise for exams — built for Extended Essay research on AI in education.</div>
-                    <div class="project-tech">Python · TensorFlow · Keras</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="chatbot.png" alt="IB Edubot">
+                    <div class="print-card-name">IB-Edubot</div>
+                    <div class="print-card-desc">An AI chatbot to help IB students revise for exams — built for Extended Essay research on AI in education.</div>
+                    <div class="print-card-tech">Python · TensorFlow · Keras</div>
+                    <div class="print-card-links">
                         <a href="Alea Rao_EE FINAL DRAFT NEW.pdf" target="_blank">Report ↗</a>
                         <a href="https://github.com/alearao/IB-EduBot-" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                <div class="project-card reveal reveal-delay-1">
-                    <img src="otterstream.png" alt="OtterStream" class="project-img">
-                    <div class="project-tag">Product Concept · Producthon Fall '24</div>
-                    <div class="project-name">OtterStream</div>
-                    <div class="project-desc">Helping young adults discover and share shows across streaming platforms with personalized recommendations.</div>
-                    <div class="project-tech">Product Design · Figma</div>
-                    <div class="project-links">
+                <div class="print-card">
+                    <img src="otterstream.png" alt="OtterStream">
+                    <div class="print-card-tag">Product Concept · Producthon Fall '24</div>
+                    <div class="print-card-name">OtterStream</div>
+                    <div class="print-card-desc">Helping young adults discover and share shows across streaming platforms with personalized recommendations.</div>
+                    <div class="print-card-tech">Product Design · Figma</div>
+                    <div class="print-card-links">
                         <a href="https://www.canva.com/design/DAGWrbNYAuc/Vr7EPsjLXMC4Z5t1pZUWOA/edit" target="_blank">Product ↗</a>
                     </div>
                 </div>
@@ -1182,6 +1298,32 @@
         showLessBtn.style.display = 'none';
         showMoreBtn.style.display = 'inline-block';
     });
+
+
+    // ── PRINT CONTACT SHEET ─────────────────────────────────
+    const printBtn = document.getElementById('printBtn');
+    const printsArea = document.getElementById('printsArea');
+    if (printBtn && printsArea) {
+        const rots = [-3.2, 1.8, -1.4, 2.6, -2.1, 3.0, -0.8, 2.3];
+        printsArea.querySelectorAll('.print-card').forEach((p, i) => {
+            p.style.setProperty('--rot', rots[i % rots.length] + 'deg');
+            p.style.setProperty('--delay', (i * 0.07) + 's');
+        });
+        printBtn.addEventListener('click', () => {
+            const isOpen = printsArea.classList.toggle('open');
+            if (isOpen) {
+                printBtn.innerHTML = printBtn.innerHTML.replace('Print Projects', 'Hide Projects');
+                // Re-trigger animations
+                printsArea.querySelectorAll('.print-card').forEach(p => {
+                    p.style.animation = 'none';
+                    void p.offsetWidth;
+                    p.style.animation = '';
+                });
+            } else {
+                printBtn.innerHTML = printBtn.innerHTML.replace('Hide prints', 'Print contact sheet');
+            }
+        });
+    }
     </script>
 </body>
 </html>
