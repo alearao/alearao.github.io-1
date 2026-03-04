@@ -2,467 +2,1116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alea Rao | Portfolio</title>
+    <title>Alea Rao</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── TOKENS ───────────────────────────────────────────── */
+        :root {
+            --ink:      #0D0D0D;
+            --paper:    #F4EFE6;
+            --paper2:   #EDE7DB;
+            --mid:      #7A7468;
+            --line:     rgba(13,13,13,0.12);
+            --zap:      #B8A9F5;
+            --zap-dim:  #9580e8;
+            --serif:    'Cormorant Garamond', Georgia, serif;
+            --mono:     'DM Mono', 'Courier New', monospace;
+            --sans:     'DM Sans', sans-serif;
+            --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ── RESET ────────────────────────────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--sans);
+            font-weight: 300;
+            line-height: 1.6;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* ── CUSTOM CURSOR ────────────────────────────────────── */
+        #cursor {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--ink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s var(--ease), width 0.25s var(--ease), height 0.25s var(--ease), background 0.2s;
+            mix-blend-mode: multiply;
+        }
+        #cursor.link {
+            width: 36px; height: 36px;
+            background: var(--ink);
+        }
+
+        /* ── NAV ──────────────────────────────────────────────── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 48px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s, background 0.3s, backdrop-filter 0.3s;
+        }
+        nav.scrolled {
+            border-color: var(--line);
+            background: rgba(244,239,230,0.85);
+            backdrop-filter: blur(16px);
+        }
+        .nav-logo {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 1.25rem;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex; gap: 36px; list-style: none;
+        }
+        .nav-links a {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mid);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a.active { color: var(--ink); }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none; border: none;
+            font-family: var(--mono); font-size: 0.75rem;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--ink); cursor: none;
+        }
+
+        /* ── HERO ─────────────────────────────────────────────── */
+        #home {
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 48px 72px;
+            position: relative;
+            border-bottom: 1px solid var(--line);
+        }
+        .hero-eyebrow {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+        }
+        .hero-name {
+            font-family: var(--serif);
+            font-weight: 300;
+            font-style: italic;
+            font-size: clamp(72px, 11vw, 160px);
+            line-height: 0.92;
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeUp 1s var(--ease) 0.35s forwards;
+        }
+        .hero-name em {
+            font-style: normal;
+            font-weight: 600;
+        }
+        .hero-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease) 0.55s forwards;
+        }
+        .hero-desc {
+            max-width: 380px;
+            font-size: 1rem;
+            color: var(--mid);
+            line-height: 1.7;
+        }
+        .hero-tags {
+            display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+        }
+        .hero-tag {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--mid);
+            border: 1px solid var(--line);
+            padding: 5px 12px;
+            border-radius: 100px;
+        }
+        .hero-scroll {
+            position: absolute;
+            bottom: 72px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            animation: fadeUp 1s var(--ease) 1s forwards, bounce 2.4s ease-in-out 2s infinite;
+            opacity: 0;
+        }
+        .hero-scroll-line {
+            width: 1px; height: 48px;
+            background: linear-gradient(to bottom, var(--ink), transparent);
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ── SECTION WRAPPER ──────────────────────────────────── */
+        section {
+            border-bottom: 1px solid var(--line);
+            position: relative;
+        }
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 48px;
+        }
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 24px;
+            margin-bottom: 72px;
+        }
+        .section-num {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--mid);
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .section-title {
+            font-family: var(--serif);
+            font-size: clamp(36px, 4vw, 56px);
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+        .section-title em {
+            font-style: normal;
+            font-weight: 600;
+        }
+        .section-bignum {
+            position: absolute;
+            top: 48px; right: 48px;
+            font-family: var(--serif);
+            font-size: clamp(120px, 16vw, 220px);
+            font-weight: 600;
+            color: rgba(13,13,13,0.04);
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* ── ABOUT ────────────────────────────────────────────── */
+        #about .section-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+        .about-left { padding-top: 8px; }
+        .about-right {}
+        .about-body p {
+            font-size: 1.05rem;
+            color: #3a3630;
+            line-height: 1.85;
+            margin-bottom: 1.4em;
+        }
+        .about-body p:last-child { margin-bottom: 0; }
+        .about-stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            margin-top: 48px;
+            border: 1px solid var(--line);
+        }
+        .about-stat {
+            padding: 24px;
+            border-right: 1px solid var(--line);
+            background: var(--paper);
+            transition: background 0.2s;
+        }
+        .about-stat:nth-child(2) { border-right: none; }
+        .about-stat:nth-child(3) { border-top: 1px solid var(--line); border-right: 1px solid var(--line); }
+        .about-stat:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
+        .about-stat:hover { background: var(--zap); }
+        .about-stat-num {
+            font-family: var(--serif);
+            font-size: 2.4rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .about-stat-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mid);
+        }
+        .resume-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink);
+            text-decoration: none;
+            margin-top: 40px;
+            padding: 14px 24px;
+            border: 1px solid var(--ink);
+            transition: background 0.2s, color 0.2s;
+        }
+        .resume-link:hover { background: var(--ink); color: var(--paper); }
+        .resume-link svg { transition: transform 0.2s var(--ease); }
+        .resume-link:hover svg { transform: translateY(2px) translateX(2px); }
+
+        /* ── EDUCATION ────────────────────────────────────────── */
+        #education { background: var(--paper2); }
+        .edu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+        }
+        .edu-card {
+            background: var(--paper);
+            padding: 40px;
+            transition: background 0.25s var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
+        .edu-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--zap);
+            transform: scaleY(0); transform-origin: bottom;
+            transition: transform 0.4s var(--ease);
+        }
+        .edu-card:hover::before { transform: scaleY(1); }
+        .edu-card:hover { background: #EDE7D6; }
+        .edu-year {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid);
+            margin-bottom: 16px;
+        }
+        .edu-name {
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        .edu-degree {
+            font-size: 0.9rem;
+            color: var(--mid);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .edu-badge {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            background: var(--zap);
+            color: var(--ink);
+            margin-bottom: 20px;
+        }
+        .edu-detail {
+            font-size: 0.88rem;
+            color: var(--mid);
+            line-height: 1.6;
+        }
+        .coursework-chips {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-top: 20px;
+        }
+        .chip {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border: 1px solid var(--line);
+            color: var(--mid);
+            border-radius: 2px;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .chip:hover { border-color: var(--ink); color: var(--ink); background: var(--zap); }
+
+        /* ── EXPERIENCE ───────────────────────────────────────── */
+        .exp-list { display: flex; flex-direction: column; }
+        .exp-row {
+            display: grid;
+            grid-template-columns: 200px 1fr auto;
+            gap: 40px;
+            align-items: baseline;
+            padding: 32px 0;
+            border-bottom: 1px solid var(--line);
+            transition: background 0.2s;
+            cursor: default;
+        }
+        .exp-row:first-child { border-top: 1px solid var(--line); }
+        .exp-row:hover { background: rgba(197,242,39,0.08); margin: 0 -48px; padding: 32px 48px; }
+        .exp-meta {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--mid);
+            line-height: 1.6;
+        }
+        .exp-meta-org {
+            color: var(--ink);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .exp-content {}
+        .exp-title {
+            font-family: var(--serif);
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .exp-bullets {
+            padding-left: 0;
+            list-style: none;
+        }
+        .exp-bullets li {
+            font-size: 0.88rem;
+            color: var(--mid);
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px;
+            line-height: 1.6;
+        }
+        .exp-bullets li::before {
+            content: '—';
+            position: absolute; left: 0;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--zap-dim);
+        }
+
+        .show-more-btn {
+            margin-top: 40px;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: none;
+            border: 1px solid var(--line);
+            padding: 12px 24px;
+            color: var(--mid);
+            cursor: none;
+            transition: all 0.2s;
+        }
+        .show-more-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--zap); }
+        .hidden-exp { display: none; }
+
+        /* ── PROJECTS ─────────────────────────────────────────── */
+        #projects { background: var(--paper2); }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        .project-card {
+            background: var(--paper);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            min-height: 300px;
+            transition: background 0.25s var(--ease);
+        }
+        .project-card:hover { background: var(--paper2); }
+        .project-img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            background: var(--paper2);
+            margin-bottom: 24px;
+            filter: grayscale(20%);
+            transition: filter 0.3s;
+        }
+        .project-card:hover .project-img { filter: grayscale(0%) brightness(1.05); }
+        .project-tag {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            background: var(--zap);
+            color: var(--ink);
+            margin-bottom: 12px;
+            border-radius: 2px;
+            width: fit-content;
+        }
+        .project-name {
+            font-family: var(--serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .project-desc {
+            font-size: 0.83rem;
+            color: var(--mid);
+            line-height: 1.65;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+        .project-tech {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            color: var(--mid);
+            margin-bottom: 20px;
+        }
+        .project-links {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .project-links a {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border: 1px solid var(--line);
+            color: var(--mid);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .project-links a:hover { background: var(--zap); border-color: var(--zap); color: var(--ink); }
+
+        /* ── SKILLS ───────────────────────────────────────────── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        .skill-block {
+            padding: 36px;
+            background: var(--paper2);
+            border-left: 3px solid transparent;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .skill-block:hover { border-color: var(--zap); background: var(--paper); }
+        .skill-cat {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--mid);
+            margin-bottom: 16px;
+        }
+        .skill-items {
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: var(--ink);
+            line-height: 1.9;
+        }
+
+        /* ── CONTACT ──────────────────────────────────────────── */
+        #contact {
+            background: var(--ink);
+        }
+        #contact .section-title { color: var(--paper); }
+        #contact .section-num { color: rgba(244,239,230,0.35); }
+        #contact .section-bignum { color: rgba(244,239,230,0.04); }
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: end;
+        }
+        .contact-cta {
+            font-family: var(--serif);
+            font-size: clamp(36px, 4.5vw, 60px);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--paper);
+            line-height: 1.2;
+        }
+        .contact-cta em { font-style: normal; font-weight: 600; color: var(--zap); }
+        .contact-links-col {
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgba(244,239,230,0.5);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(244,239,230,0.1);
+            transition: color 0.2s;
+        }
+        .contact-link:hover { color: var(--zap); }
+        .contact-link-label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(244,239,230,0.25);
+            margin-bottom: 4px;
+        }
+        .contact-link-val {
+            font-family: var(--sans);
+            font-size: 0.95rem;
+        }
+        .contact-arrow { font-size: 1rem; transition: transform 0.2s var(--ease); }
+        .contact-link:hover .contact-arrow { transform: translate(4px, -4px); }
+
+        /* ── FOOTER ───────────────────────────────────────────── */
+        footer {
+            background: var(--ink);
+            border-top: 1px solid rgba(244,239,230,0.08);
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-left {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(244,239,230,0.25);
+        }
+        .footer-right {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 0.9rem;
+            color: rgba(244,239,230,0.25);
+        }
+
+        /* ── ANIMATIONS ───────────────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+        }
+        .reveal.in { opacity: 1; transform: none; }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ── MOBILE ───────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            nav { padding: 18px 24px; }
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column; gap: 20px;
+                position: fixed; top: 60px; left: 0; right: 0;
+                background: var(--paper);
+                border-bottom: 1px solid var(--line);
+                padding: 24px;
+                z-index: 99;
+            }
+            .nav-mobile-toggle { display: block; }
+            #home { padding: 0 24px 48px; }
+            .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
+            .hero-scroll { display: none; }
+            .section-inner { padding: 64px 24px; }
+            .section-bignum { display: none; }
+            #about .section-inner { grid-template-columns: 1fr; gap: 48px; }
+            .edu-grid { grid-template-columns: 1fr; }
+            .exp-row { grid-template-columns: 1fr; gap: 12px; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr 1fr; }
+            .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+            footer { flex-direction: column; gap: 12px; padding: 24px; text-align: center; }
+        }
+        @media (max-width: 600px) {
+            .skills-grid { grid-template-columns: 1fr; }
+            .about-stat-row { grid-template-columns: 1fr 1fr; }
+            body { cursor: auto; }
+            #cursor { display: none; }
+        }
+    </style>
 </head>
-<body class="landing-active">
-    <!-- Landing Page -->
-    <div class="landing-page" id="landing">
-        <!-- Animated Background Elements -->
-        <div class="landing-bg">
-            <div class="orbit-container">
-                <div class="orbit orbit-1">
-                    <div class="orbit-dot"></div>
-                </div>
-                <div class="orbit orbit-2">
-                    <div class="orbit-dot"></div>
-                </div>
-                <div class="orbit orbit-3">
-                    <div class="orbit-dot"></div>
-                </div>
-            </div>
-            <div class="mesh-gradient"></div>
-            <div class="light-rays"></div>
-        </div>
+<body>
 
-        <div class="landing-content">
-            <!-- 3D Logo -->
-            <div class="landing-logo-container">
-                <div class="landing-logo" data-text="AR">AR</div>
-                <div class="logo-ring"></div>
-                <div class="logo-ring-2"></div>
-            </div>
+    <!-- Cursor -->
+    <div id="cursor"></div>
 
-            <!-- Glitch Title -->
-            <h1 class="landing-title" data-text="ALEA RAO">
-                <span class="letter" data-letter="A">A</span>
-                <span class="letter" data-letter="l">l</span>
-                <span class="letter" data-letter="e">e</span>
-                <span class="letter" data-letter="a">a</span>
-                <span class="letter space">&nbsp;</span>
-                <span class="letter" data-letter="R">R</span>
-                <span class="letter" data-letter="a">a</span>
-                <span class="letter" data-letter="o">o</span>
-            </h1>
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="#home" class="nav-logo">Alea Rao</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="nav-mobile-toggle" id="menuBtn" aria-label="Menu">Menu</button>
+    </nav>
 
-            <!-- Typing Effect Subtitle -->
-            <div class="landing-subtitle-container">
-                <p class="landing-subtitle">
-                    <span class="typing-text"></span>
-                    <span class="cursor">|</span>
-                </p>
-            </div>
-
-            <!-- Animated Stats -->
-            
-
-            <div class="landing-tagline">
-                <span class="tagline-icon">✦</span>
-                Building the future, one line at a time
-                <span class="tagline-icon">✦</span>
-            </div>
-
-            <!-- Fancy Enter Button with Holographic Effect -->
-            <button class="landing-enter-btn" onclick="enterSite()">
-                <span class="btn-bg"></span>
-                <span class="btn-text">
-                    <span class="btn-icon-left">⟨</span>
-                    Enter Portfolio
-                    <span class="btn-icon-right">⟩</span>
-                </span>
-                <span class="btn-shimmer"></span>
-            </button>
-        </div>
-
-        <div class="landing-particles"></div>
-
-        <!-- Corner Decorations -->
-        <div class="corner-decoration corner-tl"></div>
-        <div class="corner-decoration corner-tr"></div>
-        <div class="corner-decoration corner-bl"></div>
-        <div class="corner-decoration corner-br"></div>
-    </div>
-
-    <!-- Main Content (hidden initially) -->
-    <div class="main-content" id="mainContent">
-        <!-- Header -->
-        <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#home" class="logo">AR</a>
-                <nav>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#education">Education</a></li>
-                        <li><a href="#experience">Experience</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </nav>
-                <div class="mobile-menu">☰</div>
+    <!-- ── HERO ─────────────────────────────────────────────── -->
+    <section id="home">
+        <div class="hero-eyebrow">Computer Science · Tufts University · Class of 2028</div>
+        <h1 class="hero-name">Alea<br><em>Rao</em></h1>
+        <div class="hero-bottom">
+            <p class="hero-desc">
+                Builder, designer, and CS student. I bridge the gap between technical systems and human experience — through code, product, and consulting.
+            </p>
+            <div class="hero-tags">
+                <span class="hero-tag">Software Developer</span>
+                <span class="hero-tag">Product Manager</span>
             </div>
         </div>
-        </header>
-        <div class="header-spacer"></div>
-
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Hello, I'm <span class="hero-highlight">Alea Rao</span></h1>
-                <p>A Computer Science student at Tufts University</p>
-                <a href="#contact" class="cta-button">Get In Touch</a>
-            </div>
+        <div class="hero-scroll">
+            <div class="hero-scroll-line"></div>
+            <span>Scroll</span>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="about-content">
-            <div class="about-text">
-                <h2>About Me</h2>
-                <p>I'm a rising sophomore at Tufts University, pursuing a degree in Computer Science with a focus on software development and product design. My passion lies in creating intuitive, user-friendly applications that solve real-world problems.</p>
-                <p>As an aspiring software engineer and product manager, I combine technical skills with strategic thinking to build innovative solutions. I'm constantly learning new technologies and methodologies to enhance my capabilities.</p>
-                <p>This portfolio showcases my journey, skills, and projects that highlight my dedication to software development!</p>
-                <!-- Add this resume download button -->
-                <div class="resume-download">
-                    <a href="resume.pdf" class="resume-btn" download>
-                        <span class="resume-icon"></span>
-                        Download Resume
-                    </a>
+    <!-- ── ABOUT ─────────────────────────────────────────────── -->
+    <section id="about">
+        <div class="section-bignum">02</div>
+        <div class="section-inner">
+            <div class="about-left reveal">
+                <div class="section-header">
+                    <span class="section-num">02 /</span>
+                    <h2 class="section-title">About <em>Me</em></h2>
+                </div>
+                <div class="about-stat-row">
+                    <div class="about-stat">
+                        <div class="about-stat-num">3.88</div>
+                        <div class="about-stat-label">GPA</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-num">8+</div>
+                        <div class="about-stat-label">Projects</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-num">3</div>
+                        <div class="about-stat-label">Hackathons</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-num">2</div>
+                        <div class="about-stat-label">Awards</div>
+                    </div>
+                </div>
+                <a href="resume.pdf" download class="resume-link">
+                    Download Résumé
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M2 2h10v10M2 12L12 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="about-right reveal reveal-delay-2">
+                <div class="about-body">
+                    <p>I'm a sophomore at Tufts University studying Computer Science, with minors in Mathematics and Human Factors Engineering. I'm drawn to problems that sit at the intersection of systems and people.</p>
+                    <p>My work spans full-stack development, product management, and UX design. From building financial security SDKs at HackHarvard to interning at EY and consulting on AI strategy — I bring both technical depth and strategic thinking.</p>
+                    <p>I'm fluent in English, conversational in Mandarin, and have a global perspective from growing up in Singapore. I care about building things that are elegant, purposeful, and real.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Education Section -->
-    <section class="education" id="education">
-        <div class="container">
-            <h2 class="section-title">Education</h2>
-            <div class="education-container">
-                <div class="timeline-card">
-                    <div class="timeline-content">
-                        <h3>Tufts University</h3>
-                        <p class="timeline-subtitle">Bachelor of Science in Engineering in Computer Science</p>
-                        <p>Minors: Mathematics and Human Factors Engineering</p>
-                        <p>Aug 2024 - May 2028</p>
-                        <ul class="timeline-list">
-                            <li>Dean's List: 2024-2025</li>
-                            <li>GPA: 3.88/4.0</li>
+    <!-- ── EDUCATION ─────────────────────────────────────────── -->
+    <section id="education">
+        <div class="section-bignum">03</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">03 /</span>
+                <h2 class="section-title">Educa<em>tion</em></h2>
+            </div>
+            <div class="edu-grid">
+                <div class="edu-card reveal">
+                    <div class="edu-year">Aug 2024 — May 2028</div>
+                    <div class="edu-name">Tufts University</div>
+                    <div class="edu-degree">BSE in Computer Science · Minors: Mathematics & Human Factors Engineering</div>
+                    <div class="edu-badge">Dean's List · GPA 3.88</div>
+                    <div class="edu-detail">Relevant coursework:</div>
+                    <div class="coursework-chips">
+                        <span class="chip">Data Structures</span>
+                        <span class="chip">Machine Learning</span>
+                        <span class="chip">Algorithms</span>
+                        <span class="chip">Web Development</span>
+                        <span class="chip">Linear Algebra</span>
+                        <span class="chip">Discrete Math</span>
+                        <span class="chip">Calc III</span>
+                        <span class="chip">HF Engineering</span>
+                    </div>
+                </div>
+                <div class="edu-card reveal reveal-delay-2">
+                    <div class="edu-year">Aug 2010 — May 2024</div>
+                    <div class="edu-name">UWCSEA Singapore</div>
+                    <div class="edu-degree">International Baccalaureate Diploma</div>
+                    <div class="edu-badge">IB Score: 39/45</div>
+                    <div class="edu-detail">Higher Level subjects:</div>
+                    <div class="coursework-chips">
+                        <span class="chip">HL Computer Science</span>
+                        <span class="chip">HL Mathematics</span>
+                        <span class="chip">HL Chemistry</span>
+                        <span class="chip">SL Economics</span>
+                        <span class="chip">SL Chinese B</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── EXPERIENCE ────────────────────────────────────────── -->
+    <section id="experience">
+        <div class="section-bignum">04</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">04 /</span>
+                <h2 class="section-title">Experi<em>ence</em></h2>
+            </div>
+            <div class="exp-list">
+
+                <div class="exp-row reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Tufts JumboCode</span>
+                        Oct 2025 — Present<br>Medford, MA
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Software Developer</div>
+                        <ul class="exp-bullets">
+                            <li>Building a web application with React, Next.js, TypeScript, and PostgreSQL as part of a cross-functional team</li>
                         </ul>
-                        <br>
-                        <div class="timeline-card">
-                        <div class="timeline-content">
-                            <h3>Relevant Coursework</h3>
-                            <ul class="coursework-list">
-                                <li class="coursework-item">CS11: Intro to CS</li>
-                                <li class="coursework-item">CS15: Data Structures</li>
-                                <li class="coursework-item">EN1: Engineering for the Customer</li>
-                                <li class="coursework-item">MATH70: Linear Algebra</li>
-                                <li class="coursework-item">MATH61: Discrete Maths</li>
-                                <li class="coursework-item">CS20: Web Development</li>
-                                <li class="coursework-item">MATH42: CALC III</li>
-                            </ul>
-                        </div>
+                    </div>
                 </div>
+
+                <div class="exp-row reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Tufts Consulting Collective</span>
+                        Sept 2025 — Present<br>Medford, MA
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Analyst</div>
+                        <ul class="exp-bullets">
+                            <li>Building partner ecosystem and AI GTM strategy through landscape analysis and fit frameworks for a client</li>
+                        </ul>
+                    </div>
                 </div>
+
+                <div class="exp-row reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Tufts University</span>
+                        Aug 2025 — Present<br>Medford, MA
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">CS Teaching Assistant</div>
+                        <ul class="exp-bullets">
+                            <li>Weekly office hours on introductory Python; responsible for grading and student feedback</li>
+                        </ul>
+                    </div>
                 </div>
+
+                <div class="exp-row reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Ernst & Young</span>
+                        June — Aug 2025<br>Singapore
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Technology Consulting Intern</div>
+                        <ul class="exp-bullets">
+                            <li>Developed a self-service UX for a government agency and facilitated concept testing with stakeholders</li>
+                            <li>Researched AI models and made recommendations for final product implementation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-row reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Tufts Women in Product</span>
+                        May 2025 — Present<br>Medford, MA
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Director of Marketing</div>
+                        <ul class="exp-bullets">
+                            <li>Founded the club's marketing function, building brand identity and outreach strategy from the ground up</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Hidden -->
+                <div class="exp-row hidden-exp reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">IDEA Lab, Tufts</span>
+                        Fall 2024 — Present<br>Medford, MA
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Design Evolution Project Lead</div>
+                        <ul class="exp-bullets">
+                            <li>Developing an ML-powered image generation platform using OpenAI, TensorFlow, and OpenCV</li>
+                            <li>Led user research, competitive analysis, and Figma prototyping</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-row hidden-exp reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">Elev8.vc</span>
+                        Dec 2022 — Jan 2023<br>Singapore
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Deep Tech Research Intern</div>
+                        <ul class="exp-bullets">
+                            <li>Conducted market research on the Singapore mobility landscape and autonomous vehicle technology for a B2B deep-tech VC fund</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-row hidden-exp reveal">
+                    <div class="exp-meta">
+                        <span class="exp-meta-org">HighQ Tuition</span>
+                        Mar 2022 — Oct 2023<br>Singapore
+                    </div>
+                    <div class="exp-content">
+                        <div class="exp-title">Teaching Assistant</div>
+                        <ul class="exp-bullets">
+                            <li>Led "Intro to Coding" camps for 30+ students; produced online learning resources for Maths and Science</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
-            <div class="education-container">
-                <div class="timeline-card">
-                    <div class="timeline-content">
-                        <h3>United World College South East Asia</h3>
-                        <p class="timeline-subtitle">International Baccalaureate Diploma (2022-2024)</p>
-                        <p>Aug 2010 - May 2024</p>
-                        <ul class="timeline-list">
-                            <li>Final IB Score: 39/45</li>
-                            <li>Relevant Coursework: </li>
-                            <ul class="coursework-list">
-                                <li class="coursework-item">HL Computer Science</li>
-                                <li class="coursework-item">HL Mathematics</li>
-                                <li class="coursework-item">HL Chemistry</li>
-                                <li class="coursework-item">SL Economics</li>
-                                <li class="coursework-item">SL Chinese B</li>
-                        </ul>  
-                </div>
-                </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Work Experience Section -->
-    <section class="experience" id="experience">
-        <div class="container">
-            <h2 class="section-title">Work Experience</h2>
-            <div class="experience-list">
-                <!-- First 3 cards: always visible -->
-                <div class="experience-card">
-                    <h3>Software Developer</h3>
-                    <p class="timeline-subtitle">Tufts Jumbocode | Oct 2025 - Present | Medford, MA</p>
-                    <ul class="timeline-list">
-                        <li>Collaborated with a team to develop and launch a web application using React, Next.js, and TypeScript, with PostgreSQL for backend support.</li>
-                    </ul>
-                </div>
-                <div class="experience-card">
-                    <h3>Analyst</h3>
-                    <p class="timeline-subtitle">Tufts Consulting Collective | Sept 2025 - Present | Medford, MA</p>
-                    <ul class="timeline-list">
-                        <li>Working with a 9-person consulting team to build a client’s partner ecosystem and AI GTM strategy through landscape analysis, fit frameworks, and education tools.</li>
-                    </ul>
-                </div>
-                <div class="experience-card">
-                    <h3>Computer Science Teaching Assistant</h3>
-                    <p class="timeline-subtitle">Tufts University | Aug 2025 - Present | Medford, MA</p>
-                    <ul class="timeline-list">
-                        <li>Facilitate student learning through weekly office hours on introductory coding concepts in Python</li>
-                        <li>Responsible for grading assignments and providing feedback to students</li>
-
-                    </ul>
-                </div>
-                <div class="experience-card">
-                    <h3>Technology Consulting Intern</h3>
-                    <p class="timeline-subtitle">Ernst & Young | June 2025 - Aug 2025 | Singapore</p>
-                    <ul class="timeline-list">
-                        <li>Developed a self-service user experience and interface for a government agency</li>
-                        <li>Facilitated concept testing sessions with stakeholders to validate alignment between visionary concepts and the government agency’s service vision</li>
-                        <li>Researched AI models and made recommendations for final product implementation</li>
-                </div>
-
-                <!-- Hidden cards: add class 'hidden-experience' -->
-                <div class="experience-card">
-                    <h3>Director of Marketing</h3>
-                    <p class="timeline-subtitle">Tufts Women in Product | May 2025 - Present | Medford, MA</p>
-                    <ul class="timeline-list">
-                        <li>Founded the club’s marketing function, building brand identity and outreach strategy from scratch</li>
-                        <li>Designed campaigns and events to establish WiP’s presence and foster cross-campus collaborations</li>
-                </div>
-
-                <div class="experience-card hidden-experience">
-                    <h3>Design Evolution Project Lead</h3>
-                    <p class="timeline-subtitle">IDEA Lab Tufts University | Fall 2024 - Present | Medford, MA</p>
-                    <ul class="timeline-list">
-                        <li>Aims to leverage the product design abilities of the human brain to develop a novel evolution design system</li>
-                        <li>Developed an ML-powered image generation platform by conducting user research, competitive analysis, and Figma
-                        prototyping, as well as using tools like OpenAI, TensorFlow, and OpenCV for design system integration.</li>
-                    </ul>
-                </div>
-                <div class="experience-card hidden-experience">
-                    <h3>Deep Tech Research Intern</h3>
-                    <p class="timeline-subtitle">Elev8.vc | Dec 2022 - Jan 2023 | Singapore</p>
-                    <ul class="timeline-list">
-                        <li>Worked for a B2B-focused VC fund that invests in early-stage deep technology founders.</li>
-                        <li>Conducted market research to help identify investment trends and opportunities within the market of mobility</li>
-                        <li>Researched the Mobility landscape in Singapore and explored the technology behind autonomous vehicles</li>
-                    </ul>
-                </div>
-                <div class="experience-card hidden-experience">
-                    <h3>Assisting/Teaching at Tuition Center</h3>
-                    <p class="timeline-subtitle">HighQ Tution Center | Mar 2022 - Oct 2023 | Singapore</p>
-                    <ul class="timeline-list">
-                        <li>Lead comprehensive "Introduction to Coding" camps for 30+ students during term breaks</li>
-                        <li>Produced detailed online resources to support students in learning Mathematics and Natural Science</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Show More/Less Buttons -->
-            <div class="show-more-container" style="text-align:center; margin-top:30px;">
-                <button id="showMoreBtn" class="cta-button">Show More</button>
-                <button id="showLessBtn" class="cta-button" style="display:none;">Show Less</button>
+            <div style="display:flex; gap:12px; margin-top: 8px;">
+                <button class="show-more-btn" id="showMoreBtn">Show More ↓</button>
+                <button class="show-more-btn" id="showLessBtn" style="display:none;">Show Less ↑</button>
             </div>
         </div>
     </section>
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
-        <div class="container">
-            <h2 class="section-title">My Projects</h2>
-            <div class="projects-container">
-                <div class="project-card concept">
-                    <div class="project-image">
-                        <img src="c2pay.png" alt="C2Pay"> 
-                    </div>
-                    <div class="project-content">
-                        <h3>C2Pay</h3>
-                        <p class="concept-tag">Best Financial Hack Award by Capital One @ HackHarvard 2025</p>
-                        <p>An SDK that applies risk-based adaptive MFA and implements C2PA manifest generation with TEE-backed keys to deliver verifiable, seamless payment security.</p>
-                        <p>React Native, Expo </p>
-                        <div class="project-links">
-                            <a href="https://devpost.com/software/c2pay?ref_content=my-projects-tab&ref_feature=my_projects">Devpost</a>
-                            <a href="https://github.com/sofiaal1/C2Pay">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card concept">
-                    <div class="project-image">
-                        <img src="tccwebsite.png" alt="TCC Website"> 
-                    </div>
-                    <div class="project-content">
-                        <h3>Tufts Consulting Collective Website</h3>
-                        <p>A website developed for the Tufts Consulting Collective to showcase their services and projects.</p>
-                        <p>HTML, CSS, JavaScript</p>
-                        <div class="project-links">
-                            <a href="https://www.tuftsconsultingcollective.com">Website</a>
-                            <a href="https://github.com/alearao/tccwebsite">Github</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card concept">
-                    <div class="project-image">
-                        <img src="cinelog.png" alt="Cinelog"> 
-                    </div>
-                    <div class="project-content">
-                        <h3>Cinelog</h3>
-                        <p>A university marketplace app designed to help students easily share, borrow, and offer resources and services within their campus community</p>
-                        <p>HTML, CSS, JavaScript, Node.js, NoSQL, MongoDB</p>
-                        <div class="project-links">
-                            <a href="https://github.com/kubsgok/cinelog">Github</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card concept">
-                    <div class="project-image">
-                        <img src="trovr.png" alt="Trovr"> 
-                    </div>
-                    <div class="project-content">
-                        <h3>Trovr</h3>
-                        <p class="concept-tag">Awarded 2nd Place @ Tufts Producthon Spring 2025</p>
-                        <p>A university marketplace app designed to help students easily share, borrow, and offer resources and services within their campus community</p>
-                        <div class="project-links">
-                            <a href="https://www.canva.com/design/DAGqtA3C5RY/wihlm53eKoVSRYpNfciN9w/edit">See the Product</a>
-                            <a href="https://github.com/chloeewong19/campus-card-swap">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="jewelry.png" alt="Jewelry Database System">
-                    </div>
-                    <div class="project-content">
-                        <h3>Jewelry Database System</h3>
-                        <p>Worked through product life-cycle with a client to produce a management system for their jewelry business.</p>
-                        <p>Java, MySQL</p>
-                        <div class="project-links">
-                            <a href="full IA.pdf">Report</a>
-                            <a href="https://github.com/alearao/jewelrydatabse-system">GitHub</a>    
-                            <a href="https://youtu.be/2Cy1SLAXZLg" target="_blank" rel="noopener">Video Demo</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="chatbot.png" alt="IB-Edubot">
-                    </div>
-                    <div class="project-content">
-                        <h3>IB-Edubot: AI Chatbot for IB students</h3>
-                        <p>Used python libraries to build a simple interactive chatbot designed to help IB students revise for their exams.</p>
-                        <p>Built for research purposes in AI uses in IB education</p>
-                        <p>Python, Tensorflow, Keras</p>
-                        <div class="project-links">
-                            <a href="Alea Rao_EE FINAL DRAFT NEW.pdf">Report</a>
-                            <a href="https://github.com/alearao/IB-EduBot-">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src ="jumbuddy.png" alt="Jumbuddy">
-                    </div>
-                    <div class="project-content">
-                        <h3>Jumbuddy</h3>
-                        <p>An App built for a hackathon to help students in university branch out and meet other students with similar interests</p>
-                        <p>React Native, Airtable, Tailwind</p>
-                        <div class="project-links">
-                            <a href="https://devpost.com/software/jumbuddy">View Project</a>
-                            <a href="https://github.com/rakshitranga/jumbuddy">GitHub</a>
-                            <a href="https://www.figma.com/proto/V2eQj0alaxvcAopJU8OGlO/Jumbuddy?node-id=44-748&p=f&t=xaM5U72prlMKHg9A-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=44%3A1496&show-proto-sidebar=1">Figma</a>
-                            <a href="https://youtube.com/shorts/69T6bRZ5KPg?feature=share" target="_blank" rel="noopener">Video Demo</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card concept">
-                    <div class="project-image">
-                        <img src="otterstream.png" alt="OtterStream"> 
-                    </div>
-                    <div class="project-content">
-                        <h3>OtterStream</h3>
-                        <p class="concept-tag">Product Concept</p>
-                        <p class="concept-tag">Designed for Tufts Producthon Fall 2024</p>
-                        <p>An app that helps young adults and families easily discover, enjoy, and share shows and movies across streaming platforms with personalized recommendations and social features.</p>
-                        <div class="project-links">
-                            <a href="https://www.canva.com/design/DAGWrbNYAuc/Vr7EPsjLXMC4Z5t1pZUWOA/edit?utm_content=DAGWrbNYAuc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">See the Product</a>
-                        </div>
-                        
+
+    <!-- ── PROJECTS ───────────────────────────────────────────── -->
+    <section id="projects">
+        <div class="section-bignum">05</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">05 /</span>
+                <h2 class="section-title">Pro<em>jects</em></h2>
+            </div>
+            <div class="projects-grid">
+
+                <div class="project-card reveal">
+                    <img src="c2pay.png" alt="C2Pay" class="project-img">
+                    <div class="project-tag">🏆 Best Financial Hack @ HackHarvard '25</div>
+                    <div class="project-name">C2Pay</div>
+                    <div class="project-desc">An SDK applying risk-based adaptive MFA and C2PA manifest generation with TEE-backed keys for verifiable payment security.</div>
+                    <div class="project-tech">React Native · Expo</div>
+                    <div class="project-links">
+                        <a href="https://devpost.com/software/c2pay?ref_content=my-projects-tab&ref_feature=my_projects" target="_blank">Devpost ↗</a>
+                        <a href="https://github.com/sofiaal1/C2Pay" target="_blank">GitHub ↗</a>
                     </div>
                 </div>
 
-                
+                <div class="project-card reveal reveal-delay-1">
+                    <img src="trovr.png" alt="Trovr" class="project-img">
+                    <div class="project-tag">🥈 2nd Place @ Tufts Producthon Spring '25</div>
+                    <div class="project-name">Trovr</div>
+                    <div class="project-desc">A university marketplace app for students to share, borrow, and trade resources and services within campus.</div>
+                    <div class="project-tech">Product Design · Figma</div>
+                    <div class="project-links">
+                        <a href="https://www.canva.com/design/DAGqtA3C5RY/wihlm53eKoVSRYpNfciN9w/edit" target="_blank">Product ↗</a>
+                        <a href="https://github.com/chloeewong19/campus-card-swap" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal reveal-delay-2">
+                    <img src="tccwebsite.png" alt="TCC Website" class="project-img">
+                    <div class="project-name">TCC Website</div>
+                    <div class="project-desc">Website for the Tufts Consulting Collective showcasing their services and projects.</div>
+                    <div class="project-tech">HTML · CSS · JavaScript</div>
+                    <div class="project-links">
+                        <a href="https://www.tuftsconsultingcollective.com" target="_blank">Live ↗</a>
+                        <a href="https://github.com/alearao/tccwebsite" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal reveal-delay-1">
+                    <img src="cinelog.png" alt="Cinelog" class="project-img">
+                    <div class="project-name">Cinelog</div>
+                    <div class="project-desc">A web app for tracking and discovering films, built with a full Node.js + MongoDB backend.</div>
+                    <div class="project-tech">Node.js · MongoDB · JavaScript</div>
+                    <div class="project-links">
+                        <a href="https://github.com/kubsgok/cinelog" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal reveal-delay-2">
+                    <img src="jumbuddy.png" alt="Jumbuddy" class="project-img">
+                    <div class="project-name">Jumbuddy</div>
+                    <div class="project-desc">A hackathon app helping university students meet others with similar interests.</div>
+                    <div class="project-tech">React Native · Airtable · Tailwind</div>
+                    <div class="project-links">
+                        <a href="https://devpost.com/software/jumbuddy" target="_blank">Devpost ↗</a>
+                        <a href="https://github.com/rakshitranga/jumbuddy" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal reveal-delay-3">
+                    <img src="jewelry.png" alt="Jewelry DB" class="project-img">
+                    <div class="project-name">Jewelry Database System</div>
+                    <div class="project-desc">Full product life-cycle with a client: a management system for their jewelry business.</div>
+                    <div class="project-tech">Java · MySQL</div>
+                    <div class="project-links">
+                        <a href="full IA.pdf" target="_blank">Report ↗</a>
+                        <a href="https://github.com/alearao/jewelrydatabse-system" target="_blank">GitHub ↗</a>
+                        <a href="https://youtu.be/2Cy1SLAXZLg" target="_blank">Demo ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal">
+                    <img src="chatbot.png" alt="IB Edubot" class="project-img">
+                    <div class="project-name">IB-Edubot</div>
+                    <div class="project-desc">An AI chatbot to help IB students revise for exams — built for Extended Essay research on AI in education.</div>
+                    <div class="project-tech">Python · TensorFlow · Keras</div>
+                    <div class="project-links">
+                        <a href="Alea Rao_EE FINAL DRAFT NEW.pdf" target="_blank">Report ↗</a>
+                        <a href="https://github.com/alearao/IB-EduBot-" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="project-card reveal reveal-delay-1">
+                    <img src="otterstream.png" alt="OtterStream" class="project-img">
+                    <div class="project-tag">Product Concept · Producthon Fall '24</div>
+                    <div class="project-name">OtterStream</div>
+                    <div class="project-desc">Helping young adults discover and share shows across streaming platforms with personalized recommendations.</div>
+                    <div class="project-tech">Product Design · Figma</div>
+                    <div class="project-links">
+                        <a href="https://www.canva.com/design/DAGWrbNYAuc/Vr7EPsjLXMC4Z5t1pZUWOA/edit" target="_blank">Product ↗</a>
+                    </div>
+                </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section class="skills" id="skills">
-        <div class="container">
-            <h2 class="section-title">My Skills</h2>
-            <div class="skills-container">
-                <div class="skill-card">
-                    <h3>Programming Languages</h3>
-                    <p>Java, Python, C++, HTML, CSS, JavaScript, MySQL, Git</p>
+    <!-- ── SKILLS ─────────────────────────────────────────────── -->
+    <section id="skills">
+        <div class="section-bignum">06</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">06 /</span>
+                <h2 class="section-title">Ski<em>lls</em></h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-block reveal">
+                    <div class="skill-cat">Languages</div>
+                    <div class="skill-items">Java · Python · C++<br>HTML · CSS · JavaScript<br>MySQL · Git</div>
                 </div>
-                <div class="skill-card">
-                    <h3>Software</h3>
-                    <p>VS Code, Cursor, Figma, Canva, Microsoft Office (Word, Excel, Powerpoint), Github, OpenAI</p>
+                <div class="skill-block reveal reveal-delay-1">
+                    <div class="skill-cat">Frameworks & Libraries</div>
+                    <div class="skill-items">React · React Native<br>Next.js · Tailwind CSS<br>TensorFlow · PyTorch · OpenCV</div>
                 </div>
-                <div class="skill-card">
-                    <h3>Frameworks & Libraries</h3>
-                    <p>React, React Native, Tailwind CSS, OpenCV, Tensorflow, PyTorch</p>
+                <div class="skill-block reveal reveal-delay-2">
+                    <div class="skill-cat">Tools & Software</div>
+                    <div class="skill-items">Figma · VS Code · Cursor<br>GitHub · PostgreSQL · Supabase<br>OpenAI API · Canva</div>
                 </div>
-                
-                <div class="skill-card">
-                    <h3>Databases</h3>
-                    <p>MySQL, Supabase</p>
+                <div class="skill-block reveal reveal-delay-1">
+                    <div class="skill-cat">Methodologies</div>
+                    <div class="skill-items">Agile / Scrum<br>User Research · UAT<br>Product Life-cycle · OOPs</div>
                 </div>
-                <div class="skill-card">
-                    <h3>Methodologies</h3>
-                    <p>Object-Oriented Programming, User Research, Scrum, Sprint Planning, 
-                        Concept Testing, Product life-cycle, UAT, Daily Standup</p>
+                <div class="skill-block reveal reveal-delay-2">
+                    <div class="skill-cat">Spoken Languages</div>
+                    <div class="skill-items">English (Fluent)<br>Mandarin (Intermediate)<br>Hindi (Elementary)</div>
                 </div>
-                <div class="skill-card">
-                    <h3>Languages</h3>
-                    <p>English (Fluent), Mandarin (Intermediate), Hindi (Elementary)</p>
+                <div class="skill-block reveal reveal-delay-3">
+                    <div class="skill-cat">Interests</div>
+                    <div class="skill-items">Enterprise software strategy<br>Competitive programming<br>UX / Product design</div>
                 </div>
             </div>
         </div>
     </section>
 
-
-    
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-content" style="justify-content: center;">
-                <div class="contact-info" style="text-align: center;">
-                    <div class="contact-links" style="margin-bottom: 16px;">
-                        <a href="mailto:alea.rao@tufts.edu">alea.rao@tufts.edu</a>
-                    </div>
-                    <div class="contact-links" style="margin-bottom: 16px;">
-                        <a href="mailto:alearao@gmail.com">alearao@gmail.com</a>
-                    </div>
-                    <p style="margin-bottom: 16px;">Medford, MA</p>
-                    <div class="contact-links">
-                        <a href="https://www.linkedin.com/in/alea-rao-35780421b" target="_blank" rel="noopener">LinkedIn</a> |
-                        <a href="https://github.com/alearao" target="_blank" rel="noopener">GitHub</a>
+    <!-- ── CONTACT ────────────────────────────────────────────── -->
+    <section id="contact">
+        <div class="section-bignum">07</div>
+        <div class="section-inner">
+            <div class="contact-layout">
+                <div class="reveal">
+                    <p class="contact-cta">Let's build something <em>together.</em></p>
+                </div>
+                <div class="contact-links-col reveal reveal-delay-2">
+                    <a class="contact-link" href="mailto:alea.rao@tufts.edu">
+                        <div>
+                            <div class="contact-link-label">University</div>
+                            <div class="contact-link-val">alea.rao@tufts.edu</div>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+                    <a class="contact-link" href="mailto:alearao@gmail.com">
+                        <div>
+                            <div class="contact-link-label">Personal</div>
+                            <div class="contact-link-val">alearao@gmail.com</div>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+                    <a class="contact-link" href="https://www.linkedin.com/in/alea-rao-35780421b" target="_blank">
+                        <div>
+                            <div class="contact-link-label">LinkedIn</div>
+                            <div class="contact-link-val">alearao</div>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+                    <a class="contact-link" href="https://github.com/alearao" target="_blank">
+                        <div>
+                            <div class="contact-link-label">GitHub</div>
+                            <div class="contact-link-val">github.com/alearao</div>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+                    <div class="contact-link" style="cursor:default; pointer-events:none;">
+                        <div>
+                            <div class="contact-link-label">Location</div>
+                            <div class="contact-link-val" style="color:rgba(244,239,230,0.5)">Medford, MA</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -471,215 +1120,68 @@
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-logo">Alea Rao</h3>
-                    <p>Computer Science Student</p>
-                    <p>Building innovative solutions</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Connect</h4>
-                    <div class="footer-social">
-                        <a href="https://www.linkedin.com/in/alea-rao-35780421b" target="_blank" rel="noopener">LinkedIn</a>
-                        <a href="https://github.com/alearao" target="_blank" rel="noopener">GitHub</a>
-                        <a href="mailto:alea.rao@tufts.edu">Email</a>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Alea Rao. Made with care.</p>
-            </div>
-        </div>
+        <div class="footer-left">© 2025 Alea Rao · Built with care</div>
+        <div class="footer-right">CS @ Tufts · Singapore → Boston</div>
     </footer>
 
-    </div>
-    <!-- End Main Content -->
-
-    <script src="script.js"></script>
     <script>
-    // Landing page enter animation
-    function enterSite() {
-        const landing = document.getElementById('landing');
-        const mainContent = document.getElementById('mainContent');
-        const body = document.body;
+    // ── CURSOR ─────────────────────────────────────────────────
+    const cursor = document.getElementById('cursor');
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx + 'px';
+        cursor.style.top  = my + 'px';
+    });
+    document.querySelectorAll('a, button, .project-card, .edu-card, .about-stat, .exp-row').forEach(el => {
 
-        // Remove landing class and scroll to top
-        body.classList.remove('landing-active');
-        window.scrollTo({ top: 0, behavior: 'instant' });
+    });
 
-        landing.style.animation = 'pageExplode 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
-
-        setTimeout(() => {
-            landing.style.display = 'none';
-            mainContent.style.display = 'block';
-            mainContent.style.animation = 'fadeIn 0.8s ease-in-out forwards';
-
-            // Force scroll to top with instant behavior
-            setTimeout(() => {
-                window.scrollTo({ top: 0, behavior: 'instant' });
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
-            }, 50);
-        }, 1000);
-    }
-
-    // Typing effect
-    function typeWriter(text, element, speed = 100) {
-        let i = 0;
-        function type() {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        type();
-    }
-
-    // Counter animation
-    function animateCounter(element, target, duration = 2000) {
-        const start = 0;
-        const increment = target / (duration / 16);
-        let current = start;
-        const isDecimal = target % 1 !== 0;
-
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                element.textContent = isDecimal ? target.toFixed(2) : Math.round(target);
-                clearInterval(timer);
-            } else {
-                element.textContent = isDecimal ? current.toFixed(2) : Math.round(current);
-            }
-        }, 16);
-    }
-
-    // Simplified mouse parallax effect
-    function initParallax() {
-        const landing = document.querySelector('.landing-page');
-        const logoContainer = document.querySelector('.landing-logo-container');
-
-        if (!logoContainer) return;
-
-        landing.addEventListener('mousemove', (e) => {
-            requestAnimationFrame(() => {
-                const x = (e.clientX / window.innerWidth - 0.5) * 15;
-                const y = (e.clientY / window.innerHeight - 0.5) * 15;
-
-                logoContainer.style.transform = `translate(${x}px, ${y}px)`;
-            });
+    // ── NAV SCROLL ─────────────────────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+        // Active link
+        const sections = document.querySelectorAll('section[id]');
+        let current = '';
+        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + current);
         });
-    }
+    });
 
-    // Glitch effect on hover (optimized)
-    function addGlitchEffect() {
-        const title = document.querySelector('.landing-title');
-        if (!title) return;
+    // ── MOBILE MENU ────────────────────────────────────────────
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        menuBtn.textContent = open ? 'Close' : 'Menu';
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn.textContent = 'Menu';
+    }));
 
-        let isGlitching = false;
+    // ── SCROLL REVEAL ──────────────────────────────────────────
+    const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-        title.addEventListener('mouseenter', () => {
-            if (isGlitching) return;
-            isGlitching = true;
-
-            let count = 0;
-            const glitchInterval = setInterval(() => {
-                title.style.textShadow = `
-                    ${Math.random() * 8 - 4}px ${Math.random() * 8 - 4}px 0px rgba(232, 180, 184, 0.6)
-                `;
-                count++;
-                if (count > 3) {
-                    clearInterval(glitchInterval);
-                    title.style.textShadow = '';
-                    isGlitching = false;
-                }
-            }, 60);
-        });
-    }
-
-    // Main initialization
-    document.addEventListener('DOMContentLoaded', () => {
-        // Force page to start at top
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-
-        // Animate letters
-        const letters = document.querySelectorAll('.letter');
-        letters.forEach((letter, index) => {
-            if (!letter.classList.contains('space')) {
-                letter.style.animationDelay = `${0.5 + index * 0.08}s`;
-            }
-        });
-
-        // Typing effect
-        setTimeout(() => {
-            const typingText = document.querySelector('.typing-text');
-            const texts = ['Creative Developer', 'Product Designer', 'CS Student @ Tufts'];
-            let textIndex = 0;
-
-            function typeNextText() {
-                typingText.textContent = '';
-                typeWriter(texts[textIndex], typingText, 80);
-                textIndex = (textIndex + 1) % texts.length;
-            }
-
-            typeNextText();
-            setInterval(typeNextText, 4000);
-        }, 1500);
-
-        // Animate counters
-        setTimeout(() => {
-            document.querySelectorAll('.stat-number').forEach(stat => {
-                const target = parseFloat(stat.getAttribute('data-target'));
-                animateCounter(stat, target, 2000);
-            });
-        }, 2000);
-
-        // Create optimized particles
-        const particlesContainer = document.querySelector('.landing-particles');
-        if (particlesContainer) {
-            const particleCount = window.innerWidth < 768 ? 20 : 40; // Fewer on mobile
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-
-                const size = Math.random() * 3 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${100 + Math.random() * 20}%`; // Start below viewport
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                particle.style.animationDuration = `${10 + Math.random() * 10}s`;
-
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Create light rays
-        const lightRays = document.querySelector('.light-rays');
-        for (let i = 0; i < 6; i++) {
-            const ray = document.createElement('div');
-            ray.className = 'light-ray';
-            ray.style.animationDelay = `${i * 0.5}s`;
-            lightRays.appendChild(ray);
-        }
-
-        // Initialize effects
-        initParallax();
-        addGlitchEffect();
-
-        // Button hover sound effect (visual feedback)
-        const btn = document.querySelector('.landing-enter-btn');
-        btn.addEventListener('mouseenter', () => {
-            btn.style.transform = 'translateY(-5px) scale(1.05)';
-        });
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translateY(0) scale(1)';
-        });
+    // ── SHOW MORE / LESS ───────────────────────────────────────
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    const showLessBtn = document.getElementById('showLessBtn');
+    const hiddenRows  = document.querySelectorAll('.hidden-exp');
+    showMoreBtn.addEventListener('click', () => {
+        hiddenRows.forEach(r => { r.style.display = 'grid'; setTimeout(() => r.classList.add('in'), 10); });
+        showMoreBtn.style.display = 'none';
+        showLessBtn.style.display = 'inline-block';
+    });
+    showLessBtn.addEventListener('click', () => {
+        hiddenRows.forEach(r => { r.classList.remove('in'); setTimeout(() => { r.style.display = 'none'; }, 250); });
+        showLessBtn.style.display = 'none';
+        showMoreBtn.style.display = 'inline-block';
     });
     </script>
 </body>
 </html>
-
