@@ -103,6 +103,46 @@
         }
 
         /* ── HERO ─────────────────────────────────────────────── */
+        .hero-orb {
+            position: absolute;
+            top: 12vh; right: 8vw;
+            width: clamp(180px, 22vw, 340px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, var(--zap) 0%, transparent 70%);
+            opacity: 0.35;
+            pointer-events: none;
+            animation: orbFloat 8s ease-in-out infinite alternate;
+            filter: blur(40px);
+        }
+        @keyframes orbFloat {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(20px, 30px) scale(1.08); }
+        }
+        .hero-status {
+            position: absolute;
+            top: 32px; right: 48px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mid);
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease) 1.2s forwards;
+        }
+        .hero-status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #5EBB6A;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.75); }
+        }
         #home {
             min-height: 100vh;
             display: flex; flex-direction: column;
@@ -653,11 +693,242 @@
             margin-bottom: 16px;
         }
         .skill-items {
-            font-family: var(--serif);
-            font-size: 1.05rem;
-            font-weight: 300;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 4px;
+        }
+        .skill-pill {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: 100px;
             color: var(--ink);
-            line-height: 1.9;
+            background: var(--paper);
+            transition: background 0.2s, border-color 0.2s, transform 0.2s var(--ease);
+            cursor: default;
+        }
+        .skill-pill:hover {
+            background: var(--zap);
+            border-color: var(--zap);
+            transform: translateY(-2px);
+        }
+
+        /* ── MARQUEE TICKER ──────────────────────────────────── */
+        .marquee-wrap {
+            overflow: hidden;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            background: var(--paper2);
+            padding: 12px 0;
+            white-space: nowrap;
+        }
+        .marquee-track {
+            display: inline-flex;
+            gap: 0;
+            animation: marquee 22s linear infinite;
+        }
+        .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+        .marquee-item {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--mid);
+            padding: 0 32px;
+        }
+        .marquee-dot {
+            color: var(--zap-dim);
+            padding: 0 4px;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ── PHOTOS ───────────────────────────────────────────── */
+        #photos { background: var(--paper); overflow: hidden; }
+        .photos-intro {
+            font-size: 1rem;
+            color: var(--mid);
+            max-width: 480px;
+            line-height: 1.7;
+            margin-bottom: 56px;
+        }
+        .photos-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto;
+            gap: 16px;
+            align-items: start;
+        }
+        .photo-item {
+            position: relative;
+            transform: rotate(var(--rot, 0deg));
+            transition: transform 0.45s var(--ease), box-shadow 0.3s, z-index 0s;
+            cursor: default;
+            z-index: 1;
+        }
+        .photo-item:hover {
+            transform: rotate(0deg) scale(1.04);
+            z-index: 10;
+        }
+        .photo-item:nth-child(1) { --rot: -2.3deg; margin-top: 24px; }
+        .photo-item:nth-child(2) { --rot: 1.6deg; }
+        .photo-item:nth-child(3) { --rot: -1.1deg; margin-top: 16px; }
+        .photo-item:nth-child(4) { --rot: 2.4deg; }
+        .photo-item:nth-child(5) { --rot: 1.8deg; }
+        .photo-item:nth-child(6) { --rot: -2.0deg; margin-top: 8px; }
+        .photo-item:nth-child(7) { --rot: 0.9deg; }
+        .photo-item:nth-child(8) { --rot: -1.5deg; margin-top: 20px; }
+        .photo-frame {
+            background: #fff;
+            padding: 10px 10px 40px;
+            box-shadow: 2px 6px 24px rgba(0,0,0,0.10);
+            transition: box-shadow 0.3s;
+        }
+        .photo-item:hover .photo-frame {
+            box-shadow: 6px 16px 40px rgba(0,0,0,0.18);
+        }
+        .photo-frame img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            display: block;
+        }
+        .photo-placeholder {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: var(--paper2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .photo-placeholder-icon {
+            font-size: 1.4rem;
+            opacity: 0.4;
+        }
+        .photo-placeholder-text {
+            font-family: var(--mono);
+            font-size: 0.55rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mid);
+            opacity: 0.5;
+        }
+        .photo-caption {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            margin-top: 6px;
+            line-height: 1.3;
+        }
+        .photo-location {
+            font-family: var(--mono);
+            font-size: 0.52rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #bbb;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .photos-wide-card {
+            grid-column: span 2;
+        }
+        .photos-wide-card .photo-frame img,
+        .photos-wide-card .photo-placeholder {
+            aspect-ratio: 16/9;
+        }
+        .photos-film-strip {
+            display: flex;
+            gap: 3px;
+            background: #111;
+            padding: 8px 0;
+            overflow: hidden;
+            border-radius: 2px;
+            margin-top: 48px;
+        }
+        .film-hole-row {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0;
+            padding: 4px 4px;
+            min-width: 20px;
+        }
+        .film-hole {
+            width: 10px;
+            height: 7px;
+            background: #333;
+            border-radius: 2px;
+        }
+        .film-frames {
+            display: flex;
+            gap: 3px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .film-frame {
+            flex-shrink: 0;
+            width: calc(25% - 3px);
+            aspect-ratio: 3/2;
+            background: #222;
+            overflow: hidden;
+            position: relative;
+        }
+        .film-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(30%) contrast(1.1) brightness(0.85);
+            transition: filter 0.3s;
+        }
+        .film-frame:hover img { filter: sepia(0%) contrast(1.1) brightness(1); }
+        .film-frame-empty {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-family: var(--mono);
+            font-size: 0.55rem;
+            letter-spacing: 0.08em;
+        }
+        .photos-tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        .photo-category-tag {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 7px 16px;
+            border: 1px solid var(--line);
+            color: var(--mid);
+            cursor: default;
+            transition: all 0.2s;
+            border-radius: 100px;
+        }
+        .photo-category-tag:hover { border-color: var(--ink); color: var(--ink); background: var(--zap); }
+        .photo-category-tag.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+        @media (max-width: 900px) {
+            .photos-board { grid-template-columns: repeat(2, 1fr); }
+            .photos-wide-card { grid-column: span 2; }
+        }
+        @media (max-width: 600px) {
+            .photos-board { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
 
         /* ── CONTACT ──────────────────────────────────────────── */
@@ -797,9 +1068,10 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="#about">About</a></li>
             <li><a href="#education">Education</a></li>
-            <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
             <li><a href="#skills">Skills</a></li>
+            <li><a href="#photos">Photos</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="nav-mobile-toggle" id="menuBtn" aria-label="Menu">Menu</button>
@@ -807,6 +1079,11 @@
 
     <!-- ── HERO ─────────────────────────────────────────────── -->
     <section id="home">
+        <div class="hero-orb"></div>
+        <div class="hero-status">
+            <div class="hero-status-dot"></div>
+            Open to opportunities
+        </div>
         <div class="hero-eyebrow">Computer Science · Tufts University · Class of 2028</div>
         <h1 class="hero-name">Alea<br><em>Rao</em></h1>
         <div class="hero-bottom">
@@ -823,6 +1100,28 @@
             <span>Scroll</span>
         </div>
     </section>
+
+    <!-- ── MARQUEE ───────────────────────────────────────────── -->
+    <div class="marquee-wrap">
+        <div class="marquee-track" id="marqueeTrack">
+            <span class="marquee-item">Builder</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Designer</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Developer</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">CS Student</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Product Thinker</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Consultant</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Singapore → Boston</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Tufts '28</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Builder</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Designer</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Developer</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">CS Student</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Product Thinker</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Consultant</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Singapore → Boston</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Tufts '28</span><span class="marquee-dot">✦</span>
+        </div>
+    </div>
 
     <!-- ── ABOUT ─────────────────────────────────────────────── -->
     <section id="about">
@@ -912,12 +1211,124 @@
         </div>
     </section>
 
-    <!-- ── EXPERIENCE ────────────────────────────────────────── -->
-    <section id="experience">
+    <!-- ── PROJECTS ───────────────────────────────────────────── -->
+    <section id="projects">
         <div class="section-bignum">04</div>
         <div class="section-inner">
             <div class="section-header reveal">
                 <span class="section-num">04 /</span>
+                <h2 class="section-title">Pro<em>jects</em></h2>
+            </div>
+            <button class="print-btn" id="printBtn">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <rect x="1" y="4" width="12" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                    <path d="M4 4V2h6v2M4 11v1h6v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    <circle cx="10.5" cy="7.5" r="0.8" fill="currentColor"/>
+                </svg>
+                Print contact sheet
+            </button>
+            <div class="prints-area" id="printsArea">
+
+                <div class="print-card">
+                    <img src="c2pay.png" alt="C2Pay">
+                    <div class="print-card-tag">🏆 Best Financial Hack @ HackHarvard '25</div>
+                    <div class="print-card-name">C2Pay</div>
+                    <div class="print-card-desc">An SDK applying risk-based adaptive MFA and C2PA manifest generation with TEE-backed keys for verifiable payment security.</div>
+                    <div class="print-card-tech">React Native · Expo</div>
+                    <div class="print-card-links">
+                        <a href="https://devpost.com/software/c2pay?ref_content=my-projects-tab&ref_feature=my_projects" target="_blank">Devpost ↗</a>
+                        <a href="https://github.com/sofiaal1/C2Pay" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="trovr.png" alt="Trovr">
+                    <div class="print-card-tag">🥈 2nd Place @ Tufts Producthon Spring '25</div>
+                    <div class="print-card-name">Trovr</div>
+                    <div class="print-card-desc">A university marketplace app for students to share, borrow, and trade resources and services within campus.</div>
+                    <div class="print-card-tech">Product Design · Figma</div>
+                    <div class="print-card-links">
+                        <a href="https://www.canva.com/design/DAGqtA3C5RY/wihlm53eKoVSRYpNfciN9w/edit" target="_blank">Product ↗</a>
+                        <a href="https://github.com/chloeewong19/campus-card-swap" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="tccwebsite.png" alt="TCC Website">
+                    <div class="print-card-name">TCC Website</div>
+                    <div class="print-card-desc">Website for the Tufts Consulting Collective showcasing their services and projects.</div>
+                    <div class="print-card-tech">HTML · CSS · JavaScript</div>
+                    <div class="print-card-links">
+                        <a href="https://www.tuftsconsultingcollective.com" target="_blank">Live ↗</a>
+                        <a href="https://github.com/alearao/tccwebsite" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="cinelog.png" alt="Cinelog">
+                    <div class="print-card-name">Cinelog</div>
+                    <div class="print-card-desc">A web app for tracking and discovering films, built with a full Node.js + MongoDB backend.</div>
+                    <div class="print-card-tech">Node.js · MongoDB · JavaScript</div>
+                    <div class="print-card-links">
+                        <a href="https://github.com/kubsgok/cinelog" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="jumbuddy.png" alt="Jumbuddy">
+                    <div class="print-card-name">Jumbuddy</div>
+                    <div class="print-card-desc">A hackathon app helping university students meet others with similar interests.</div>
+                    <div class="print-card-tech">React Native · Airtable · Tailwind</div>
+                    <div class="print-card-links">
+                        <a href="https://devpost.com/software/jumbuddy" target="_blank">Devpost ↗</a>
+                        <a href="https://github.com/rakshitranga/jumbuddy" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="jewelry.png" alt="Jewelry DB">
+                    <div class="print-card-name">Jewelry Database System</div>
+                    <div class="print-card-desc">Full product life-cycle with a client: a management system for their jewelry business.</div>
+                    <div class="print-card-tech">Java · MySQL</div>
+                    <div class="print-card-links">
+                        <a href="full IA.pdf" target="_blank">Report ↗</a>
+                        <a href="https://github.com/alearao/jewelrydatabse-system" target="_blank">GitHub ↗</a>
+                        <a href="https://youtu.be/2Cy1SLAXZLg" target="_blank">Demo ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="chatbot.png" alt="IB Edubot">
+                    <div class="print-card-name">IB-Edubot</div>
+                    <div class="print-card-desc">An AI chatbot to help IB students revise for exams — built for Extended Essay research on AI in education.</div>
+                    <div class="print-card-tech">Python · TensorFlow · Keras</div>
+                    <div class="print-card-links">
+                        <a href="Alea Rao_EE FINAL DRAFT NEW.pdf" target="_blank">Report ↗</a>
+                        <a href="https://github.com/alearao/IB-EduBot-" target="_blank">GitHub ↗</a>
+                    </div>
+                </div>
+
+                <div class="print-card">
+                    <img src="otterstream.png" alt="OtterStream">
+                    <div class="print-card-tag">Product Concept · Producthon Fall '24</div>
+                    <div class="print-card-name">OtterStream</div>
+                    <div class="print-card-desc">Helping young adults discover and share shows across streaming platforms with personalized recommendations.</div>
+                    <div class="print-card-tech">Product Design · Figma</div>
+                    <div class="print-card-links">
+                        <a href="https://www.canva.com/design/DAGWrbNYAuc/Vr7EPsjLXMC4Z5t1pZUWOA/edit" target="_blank">Product ↗</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── EXPERIENCE ────────────────────────────────────────── -->
+    <section id="experience">
+        <div class="section-bignum">05</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">05 /</span>
                 <h2 class="section-title">Experi<em>ence</em></h2>
             </div>
             <div class="exp-list">
@@ -1037,118 +1448,6 @@
         </div>
     </section>
 
-    <!-- ── PROJECTS ───────────────────────────────────────────── -->
-    <section id="projects">
-        <div class="section-bignum">05</div>
-        <div class="section-inner">
-            <div class="section-header reveal">
-                <span class="section-num">05 /</span>
-                <h2 class="section-title">Pro<em>jects</em></h2>
-            </div>
-            <button class="print-btn" id="printBtn">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <rect x="1" y="4" width="12" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/>
-                    <path d="M4 4V2h6v2M4 11v1h6v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                    <circle cx="10.5" cy="7.5" r="0.8" fill="currentColor"/>
-                </svg>
-                Print contact sheet
-            </button>
-            <div class="prints-area" id="printsArea">
-
-                <div class="print-card">
-                    <img src="c2pay.png" alt="C2Pay">
-                    <div class="print-card-tag">🏆 Best Financial Hack @ HackHarvard '25</div>
-                    <div class="print-card-name">C2Pay</div>
-                    <div class="print-card-desc">An SDK applying risk-based adaptive MFA and C2PA manifest generation with TEE-backed keys for verifiable payment security.</div>
-                    <div class="print-card-tech">React Native · Expo</div>
-                    <div class="print-card-links">
-                        <a href="https://devpost.com/software/c2pay?ref_content=my-projects-tab&ref_feature=my_projects" target="_blank">Devpost ↗</a>
-                        <a href="https://github.com/sofiaal1/C2Pay" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="trovr.png" alt="Trovr">
-                    <div class="print-card-tag">🥈 2nd Place @ Tufts Producthon Spring '25</div>
-                    <div class="print-card-name">Trovr</div>
-                    <div class="print-card-desc">A university marketplace app for students to share, borrow, and trade resources and services within campus.</div>
-                    <div class="print-card-tech">Product Design · Figma</div>
-                    <div class="print-card-links">
-                        <a href="https://www.canva.com/design/DAGqtA3C5RY/wihlm53eKoVSRYpNfciN9w/edit" target="_blank">Product ↗</a>
-                        <a href="https://github.com/chloeewong19/campus-card-swap" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="tccwebsite.png" alt="TCC Website">
-                    <div class="print-card-name">TCC Website</div>
-                    <div class="print-card-desc">Website for the Tufts Consulting Collective showcasing their services and projects.</div>
-                    <div class="print-card-tech">HTML · CSS · JavaScript</div>
-                    <div class="print-card-links">
-                        <a href="https://www.tuftsconsultingcollective.com" target="_blank">Live ↗</a>
-                        <a href="https://github.com/alearao/tccwebsite" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="cinelog.png" alt="Cinelog">
-                    <div class="print-card-name">Cinelog</div>
-                    <div class="print-card-desc">A web app for tracking and discovering films, built with a full Node.js + MongoDB backend.</div>
-                    <div class="print-card-tech">Node.js · MongoDB · JavaScript</div>
-                    <div class="print-card-links">
-                        <a href="https://github.com/kubsgok/cinelog" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="jumbuddy.png" alt="Jumbuddy">
-                    <div class="print-card-name">Jumbuddy</div>
-                    <div class="print-card-desc">A hackathon app helping university students meet others with similar interests.</div>
-                    <div class="print-card-tech">React Native · Airtable · Tailwind</div>
-                    <div class="print-card-links">
-                        <a href="https://devpost.com/software/jumbuddy" target="_blank">Devpost ↗</a>
-                        <a href="https://github.com/rakshitranga/jumbuddy" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="jewelry.png" alt="Jewelry DB">
-                    <div class="print-card-name">Jewelry Database System</div>
-                    <div class="print-card-desc">Full product life-cycle with a client: a management system for their jewelry business.</div>
-                    <div class="print-card-tech">Java · MySQL</div>
-                    <div class="print-card-links">
-                        <a href="full IA.pdf" target="_blank">Report ↗</a>
-                        <a href="https://github.com/alearao/jewelrydatabse-system" target="_blank">GitHub ↗</a>
-                        <a href="https://youtu.be/2Cy1SLAXZLg" target="_blank">Demo ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="chatbot.png" alt="IB Edubot">
-                    <div class="print-card-name">IB-Edubot</div>
-                    <div class="print-card-desc">An AI chatbot to help IB students revise for exams — built for Extended Essay research on AI in education.</div>
-                    <div class="print-card-tech">Python · TensorFlow · Keras</div>
-                    <div class="print-card-links">
-                        <a href="Alea Rao_EE FINAL DRAFT NEW.pdf" target="_blank">Report ↗</a>
-                        <a href="https://github.com/alearao/IB-EduBot-" target="_blank">GitHub ↗</a>
-                    </div>
-                </div>
-
-                <div class="print-card">
-                    <img src="otterstream.png" alt="OtterStream">
-                    <div class="print-card-tag">Product Concept · Producthon Fall '24</div>
-                    <div class="print-card-name">OtterStream</div>
-                    <div class="print-card-desc">Helping young adults discover and share shows across streaming platforms with personalized recommendations.</div>
-                    <div class="print-card-tech">Product Design · Figma</div>
-                    <div class="print-card-links">
-                        <a href="https://www.canva.com/design/DAGWrbNYAuc/Vr7EPsjLXMC4Z5t1pZUWOA/edit" target="_blank">Product ↗</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
     <!-- ── SKILLS ─────────────────────────────────────────────── -->
     <section id="skills">
         <div class="section-bignum">06</div>
@@ -1160,27 +1459,102 @@
             <div class="skills-grid">
                 <div class="skill-block reveal">
                     <div class="skill-cat">Languages</div>
-                    <div class="skill-items">Java · Python · C++<br>HTML · CSS · JavaScript<br>MySQL · Git</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">Java</span><span class="skill-pill">Python</span><span class="skill-pill">C++</span><span class="skill-pill">HTML</span><span class="skill-pill">CSS</span><span class="skill-pill">JavaScript</span><span class="skill-pill">MySQL</span><span class="skill-pill">Git</span>
+                    </div>
                 </div>
                 <div class="skill-block reveal reveal-delay-1">
                     <div class="skill-cat">Frameworks & Libraries</div>
-                    <div class="skill-items">React · React Native<br>Next.js · Tailwind CSS<br>TensorFlow · PyTorch · OpenCV</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">React</span><span class="skill-pill">React Native</span><span class="skill-pill">Next.js</span><span class="skill-pill">Tailwind CSS</span><span class="skill-pill">TensorFlow</span><span class="skill-pill">PyTorch</span><span class="skill-pill">OpenCV</span>
+                    </div>
                 </div>
                 <div class="skill-block reveal reveal-delay-2">
                     <div class="skill-cat">Tools & Software</div>
-                    <div class="skill-items">Figma · VS Code · Cursor<br>GitHub · PostgreSQL · Supabase<br>OpenAI API · Canva</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">Figma</span><span class="skill-pill">VS Code</span><span class="skill-pill">Cursor</span><span class="skill-pill">GitHub</span><span class="skill-pill">PostgreSQL</span><span class="skill-pill">Supabase</span><span class="skill-pill">OpenAI API</span><span class="skill-pill">Canva</span>
+                    </div>
                 </div>
                 <div class="skill-block reveal reveal-delay-1">
                     <div class="skill-cat">Methodologies</div>
-                    <div class="skill-items">Agile / Scrum<br>User Research · UAT<br>Product Life-cycle · OOPs</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">Agile / Scrum</span><span class="skill-pill">User Research</span><span class="skill-pill">UAT</span><span class="skill-pill">Product Life-cycle</span><span class="skill-pill">OOP</span>
+                    </div>
                 </div>
                 <div class="skill-block reveal reveal-delay-2">
                     <div class="skill-cat">Spoken Languages</div>
-                    <div class="skill-items">English (Fluent)<br>Mandarin (Intermediate)<br>Hindi (Elementary)</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">English (Fluent)</span><span class="skill-pill">Mandarin (Intermediate)</span><span class="skill-pill">Hindi (Elementary)</span>
+                    </div>
                 </div>
                 <div class="skill-block reveal reveal-delay-3">
                     <div class="skill-cat">Interests</div>
-                    <div class="skill-items">Enterprise software strategy<br>Competitive programming<br>UX / Product design</div>
+                    <div class="skill-items">
+                        <span class="skill-pill">Enterprise Software</span><span class="skill-pill">Competitive Programming</span><span class="skill-pill">UX Design</span><span class="skill-pill">Product Strategy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── PHOTOS ───────────────────────────────────────────── -->
+    <section id="photos">
+        <div class="section-bignum">07</div>
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <span class="section-num">07 /</span>
+                <h2 class="section-title">Be<em>yond</em> the Résumé</h2>
+            </div>
+            <p class="photos-intro reveal">Life outside the terminal — places visited, moments collected, things that make me, me.</p>
+            <div class="photos-board" style="margin-top: 48px;">
+                <div class="photo-item reveal">
+                    <div class="photo-frame">
+                        <img src="IMG_9489.jpeg" alt="Photo">
+                        <div class="photo-caption">greece</div>
+                        <div class="photo-location">2024</div>
+                    </div>
+                </div>
+                <div class="photo-item reveal reveal-delay-1">
+                    <div class="photo-frame">
+                        <img src="singapore.jpeg" alt="Photo">
+                        <div class="photo-caption">singapore</div>
+                        <div class="photo-location">2025</div>
+                    </div>
+                </div>
+                <div class="photo-item reveal reveal-delay-2">
+                    <div class="photo-frame">
+                        <img src="boston.jpeg" alt="Photo">
+                        <div class="photo-caption">boston red sox</div>
+                        <div class="photo-location">2026</div>
+                    </div>
+                </div>
+                <div class="photo-item reveal reveal-delay-3">
+                    <div class="photo-frame">
+                        <img src="travel.jpg" alt="Photo">
+                        <div class="photo-caption">thailand</div>
+                        <div class="photo-location">2025</div>
+                    </div>
+                </div>
+                <div class="photo-item photos-wide-card reveal">
+                    <div class="photo-frame">
+                        <img src="tufts.jpeg" alt="Photo">
+                        <div class="photo-caption">tufts</div>
+                        <div class="photo-location">2025</div>
+                    </div>
+                </div>
+                <div class="photo-item reveal reveal-delay-1">
+                     <div class="photo-frame">
+                        <img src="spring.jpeg" alt="Photo">
+                        <div class="photo-caption">spring</div>
+                        <div class="photo-location">2026</div>
+                    </div>
+                </div>
+                <div class="photo-item reveal reveal-delay-2">
+                    <div class="photo-frame">
+                        <img src="food.jpeg" alt="Photo">
+                        <div class="photo-caption">food</div>
+                        <div class="photo-location">2025</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1188,7 +1562,7 @@
 
     <!-- ── CONTACT ────────────────────────────────────────────── -->
     <section id="contact">
-        <div class="section-bignum">07</div>
+        <div class="section-bignum">08</div>
         <div class="section-inner">
             <div class="contact-layout">
                 <div class="reveal">
